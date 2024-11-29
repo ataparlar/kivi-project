@@ -51,6 +51,40 @@ cv::Mat PhaseMapGenerator::compute_phase_map(
     return phase_map;
 }
 
+cv::Mat PhaseMapGenerator::average_of_phase_maps(
+    const cv::Mat & phase_map1, const cv::Mat & phase_map2
+) {
+    /* We need to create complex versions of the phase maps.
+    Convert them from polar to cartesian in order to take average
+    Each phase map has real part and imaginary part due to the
+    signal processing basics. So, make 2 channels. */
+
+    cv::Mat phase_map1_complex(phase_map1.size(), CV_32FC2);
+    cv::Mat phase_map2_complex(phase_map2.size(), CV_32FC2);
+
+    // For holding real and imaginary part separate
+    cv::Mat phase_map1_planes[] = {cv::Mat(), cv::Mat()}; // cos and sin
+    cv::Mat phase_map2_planes[] = {cv::Mat(), cv::Mat()}; // cos and sin
+
+    cv::polarToCart(  // Seperate the phase_map1. 0-255 needs to normalized.
+        cv::Mat::ones(phase_map1.size(), CV_32F), phase_map1, 
+        phase_map1_planes[0], phase_map1_planes[1]);
+    cv::polarToCart(
+        cv::Mat::ones(phase_map2.size(), CV_32F), phase_map2,
+        phase_map2_planes[0], phase_map2_planes[1]);
+
+    // We are in cartesian planes or in real numbers now. We can take average.
+    cv::Mat avgerage_cos = (phase_map1_planes[0] + phase_map2_planes[0]) / 2.0;
+    cv::Mat avgerage_sin = (phase_map1_planes[1] + phase_map2_planes[1]) / 2.0;
+    // cv::Mat average_phase_complex = (phase_map1_complex, phase_map2_complex) / 2.0;
+
+    // Now convert this to polar back.
+    cv::Mat average_phase, average_magnitude;
+    cv::cartToPolar(avgerage_cos, avgerage_sin, average_magnitude, average_phase);
+
+    return average_phase;
+}
+
 
 
 } // namespace kivi_project
