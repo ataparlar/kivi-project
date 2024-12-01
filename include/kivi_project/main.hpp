@@ -8,7 +8,7 @@ class KiviProject {
 public:
 explicit KiviProject();
    
-void kivi();
+void double_three_step_phase_shift();
 
 private:
     PhaseMapGenerator::SharedPtr phase_map_generator_;

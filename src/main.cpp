@@ -7,7 +7,7 @@ KiviProject::KiviProject() {
 }
 
 
-void KiviProject::kivi() {
+void KiviProject::double_three_step_phase_shift() {
     cv::Mat pattern1 = phase_map_generator_->generate_pattern(0);
     cv::Mat pattern2 = phase_map_generator_->generate_pattern(60);
     cv::Mat pattern3 = phase_map_generator_->generate_pattern(120);
@@ -43,7 +43,7 @@ int main(int, char**){
 
     kivi_project::KiviProject kivi;
     
-    kivi.kivi();
+    kivi.double_three_step_phase_shift();
     
 
 }
