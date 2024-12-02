@@ -4,6 +4,7 @@ namespace kivi_project {
 
 KiviProject::KiviProject() {
       phase_map_generator_ = std::make_shared<PhaseMapGenerator>();
+      bilateral_filter_3d_ = std::make_shared<BilateralFiltering3D>();
 }
 
 
@@ -36,6 +37,44 @@ void KiviProject::double_three_step_phase_shift() {
 
 }
 
+void KiviProject::bilateral_filter_3d() {
+    std::vector<std::vector<std::vector<float>>> cloud = bilateral_filter_3d_->readPLYFileWithNormals(
+        "/home/ataparlarl/projects/kivi_assignment/KiviTechnologies_CV_Task/Tasks/3D-bilateral/OriginalMesh.ply",
+        2592, 1944
+    );
+    
+    BilateralFiltering3D::CloudXYZ cloud_;
+    for (auto row: cloud) {
+        for (auto col : row) {
+            BilateralFiltering3D::TriangleXYZ triangle;
+            triangle.point.x = col.at(0);
+            triangle.point.y = col.at(1);
+            triangle.point.z = col.at(2);
+            triangle.normal.nx = col.at(3);
+            triangle.normal.ny = col.at(4);
+            triangle.normal.nz = col.at(5);
+            cloud_.push_back(triangle);
+        }
+    }
+
+    std::vector<BilateralFiltering3D::PointXYZ> filtered_cloud_;
+    for (auto triangle : cloud_) {
+        auto k_nearest_points = bilateral_filter_3d_->getKNearestNeighbors(
+            triangle.point, cloud_, 6);
+
+        auto filtered_point = 
+        bilateral_filter_3d_->denoisePoint(
+            triangle.point, triangle.normal, k_nearest_points, 0.5, 0.5);
+    
+        filtered_cloud_.push_back(filtered_point);
+    }    
+
+    bilateral_filter_3d_->writePLYFile(
+        "/home/ataparlarl/projects/kivi_assignment/kivi_project/export/filtered_cloud.ply",
+        filtered_cloud_, false);
+    
+}
+
 }
 
 
@@ -43,7 +82,9 @@ int main(int, char**){
 
     kivi_project::KiviProject kivi;
     
-    kivi.double_three_step_phase_shift();
+    // kivi.double_three_step_phase_shift();
+
+    kivi.bilateral_filter_3d();
     
 
 }
