@@ -11,14 +11,14 @@ public:
     using ConstSharedPtr = const std::shared_ptr<BilateralFiltering3D>;
 
     struct PointXYZ {
-        double x;
-        double y;
-        double z;
+        float x;
+        float y;
+        float z;
     };
     struct NormalXYZ {
-        double nx;
-        double ny;
-        double nz;
+        float nx;
+        float ny;
+        float nz;
     };
     struct TriangleXYZ {
         PointXYZ point;
@@ -26,8 +26,8 @@ public:
     };
     using CloudXYZ = std::vector<TriangleXYZ>;
 
-    // float euclideanDistance(const PointXYZ& a, const PointXYZ& b);
-    // float dotProduct(const NormalXYZ& a, const NormalXYZ& b);
+    float euclideanDistance(const PointXYZ& a, const PointXYZ& b);
+    float dotProduct(const NormalXYZ& a, const NormalXYZ& b);
     NormalXYZ normalize(const NormalXYZ& n);
     PointXYZ denoisePoint(
         const PointXYZ& v, const NormalXYZ& n, 

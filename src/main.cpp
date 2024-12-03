@@ -37,6 +37,7 @@ void KiviProject::double_three_step_phase_shift() {
 
 }
 
+
 void KiviProject::bilateral_filter_3d() {
     std::vector<std::vector<std::vector<float>>> cloud = bilateral_filter_3d_->readPLYFileWithNormals(
         "/home/ataparlarl/projects/kivi_assignment/KiviTechnologies_CV_Task/Tasks/3D-bilateral/OriginalMesh.ply",
@@ -57,22 +58,46 @@ void KiviProject::bilateral_filter_3d() {
         }
     }
 
+    std::cout << "cloud.size: " << cloud.size() << std::endl;
     std::vector<BilateralFiltering3D::PointXYZ> filtered_cloud_;
     for (auto triangle : cloud_) {
         auto k_nearest_points = bilateral_filter_3d_->getKNearestNeighbors(
-            triangle.point, cloud_, 6);
-
+            triangle.point, cloud_, 4);
+        
         auto filtered_point = 
         bilateral_filter_3d_->denoisePoint(
             triangle.point, triangle.normal, k_nearest_points, 0.5, 0.5);
     
         filtered_cloud_.push_back(filtered_point);
-    }    
+        std::cout << "filtering" << std::endl;
+    }
+
+    std::vector<std::vector<std::vector<float>>> cloud_to_save;
+
+    for (int i=0; i<2592; i++){
+
+        std::vector<std::vector<float>> col_vector;
+        
+        for (int j=0; j<1944; j++){
+            std::vector<float> point_vector = {
+                filtered_cloud_.at(i*2592 + j).x,
+                filtered_cloud_.at(i*2592 + j).y,
+                filtered_cloud_.at(i*2592 + j).z
+            };
+            col_vector.push_back(point_vector);    
+        }
+        cloud_to_save.push_back(col_vector);
+        // std::cout << "continue" << std::endl;
+    }
+
+    std::cout << "BEFORE SAVE" << std::endl;
 
     bilateral_filter_3d_->writePLYFile(
         "/home/ataparlarl/projects/kivi_assignment/kivi_project/export/filtered_cloud.ply",
-        filtered_cloud_, false);
+        cloud_to_save, false);
     
+    std::cout << "saved" << std::endl;
+
 }
 
 }

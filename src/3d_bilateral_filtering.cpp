@@ -7,16 +7,16 @@
 
 namespace kivi_project {
 
-float euclideanDistance(const BilateralFiltering3D::PointXYZ& a, const BilateralFiltering3D::PointXYZ& b) {
+float BilateralFiltering3D::euclideanDistance(const BilateralFiltering3D::PointXYZ& a, const BilateralFiltering3D::PointXYZ& b) {
     return std::sqrt(
         std::pow(a.x - b.x, 2) + std::pow(a.y - b.y, 2) + std::pow(a.z - b.z, 2));
 }
 
-float dotProduct(const BilateralFiltering3D::NormalXYZ& a, const BilateralFiltering3D::NormalXYZ& b) {
+float BilateralFiltering3D::dotProduct(const BilateralFiltering3D::NormalXYZ& a, const BilateralFiltering3D::NormalXYZ& b) {
     return a.nx * b.nx + a.ny * b.ny + a.nz * b.nz;
 }
 
-BilateralFiltering3D::NormalXYZ normalize(const BilateralFiltering3D::NormalXYZ& n) {
+BilateralFiltering3D::NormalXYZ BilateralFiltering3D::normalize(const BilateralFiltering3D::NormalXYZ& n) {
     float length = std::sqrt(n.nx * n.nx + n.ny * n.ny + n.nz * n.nz);
     BilateralFiltering3D::NormalXYZ normal;
     normal.nx = n.nx / length;
@@ -51,7 +51,7 @@ std::vector<BilateralFiltering3D::PointXYZ> BilateralFiltering3D::getKNearestNei
     return neighborhood;
 }
 
-BilateralFiltering3D::PointXYZ denoisePoint(
+BilateralFiltering3D::PointXYZ BilateralFiltering3D::denoisePoint(
     const BilateralFiltering3D::PointXYZ& v, const BilateralFiltering3D::NormalXYZ& n, 
     const std::vector<BilateralFiltering3D::PointXYZ>& neighborhood, 
     float sigma_c, float sigma_s) 
@@ -145,7 +145,7 @@ std::vector<std::vector<std::vector<float>>> BilateralFiltering3D::readPLYFileWi
 void BilateralFiltering3D::writePLYFile(
     const std::string& filename, 
     const std::vector<std::vector<std::vector<float>>>& organized_point_cloud, 
-    bool organized = false) 
+    bool organized) 
     {
 
     std::ofstream plyFile(filename);
