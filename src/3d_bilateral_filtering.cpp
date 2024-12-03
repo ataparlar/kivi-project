@@ -10,19 +10,19 @@ namespace kivi_project
 {
 
 float BilateralFiltering3D::euclideanDistance(
-  const BilateralFiltering3D::PointXYZ & a, const BilateralFiltering3D::PointXYZ & b)
+  const PointXYZ & a, const PointXYZ & b)
 {
   return std::sqrt(std::pow(a.x - b.x, 2) + std::pow(a.y - b.y, 2) + std::pow(a.z - b.z, 2));
 }
 
 float BilateralFiltering3D::dotProduct(
-  const BilateralFiltering3D::NormalXYZ & a, const BilateralFiltering3D::NormalXYZ & b)
+  const NormalXYZ & a, const NormalXYZ & b)
 {
   return a.nx * b.nx + a.ny * b.ny + a.nz * b.nz;
 }
 
 BilateralFiltering3D::NormalXYZ BilateralFiltering3D::normalize(
-  const BilateralFiltering3D::NormalXYZ & n)
+  const NormalXYZ & n)
 {
   float length = std::sqrt(n.nx * n.nx + n.ny * n.ny + n.nz * n.nz);
   NormalXYZ normal;
@@ -42,12 +42,10 @@ std::vector<BilateralFiltering3D::PointXYZ> BilateralFiltering3D::getKNearestNei
     distances.push_back({dist, qi.point});
   }
 
-  // Sort by distance
   std::sort(distances.begin(), distances.end(), [](const auto & a, const auto & b) {
     return a.first < b.first;
   });
 
-  // Select the top k neighbors
   std::vector<PointXYZ> neighborhood;
   for (int i = 0; i < std::min(k, static_cast<int>(distances.size())); ++i) {
     neighborhood.push_back(distances[i].second);
@@ -79,7 +77,6 @@ BilateralFiltering3D::PointXYZ BilateralFiltering3D::denoisePoint(
     float wc = std::exp(-std::pow(t, 2) / (2.0f * std::pow(sigma_c, 2)));
     float ws = std::exp(-std::pow(h, 2) / (2.0f * std::pow(sigma_s, 2)));
 
-    // Update the sum and normalizer
     sum += wc * ws * h;
     normalizer += wc * ws;
   }

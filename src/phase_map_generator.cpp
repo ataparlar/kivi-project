@@ -62,7 +62,6 @@ cv::Mat PhaseMapGenerator::average_of_phase_maps(
   cv::Mat phase_map1_complex(phase_map1.size(), CV_32FC2);
   cv::Mat phase_map2_complex(phase_map2.size(), CV_32FC2);
 
-  // For holding real and imaginary part separate
   cv::Mat phase_map1_planes[] = {cv::Mat(), cv::Mat()};  // cos and sin
   cv::Mat phase_map2_planes[] = {cv::Mat(), cv::Mat()};  // cos and sin
 

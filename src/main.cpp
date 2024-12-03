@@ -57,7 +57,6 @@ void KiviProject::bilateral_filter_3d()
     }
   }
 
-  std::cout << "cloud.size: " << cloud.size() << std::endl;
   std::vector<BilateralFiltering3D::PointXYZ> filtered_cloud_;
   for (auto triangle : cloud_) {
     auto k_nearest_points = bilateral_filter_3d_->getKNearestNeighbors(triangle.point, cloud_, 4);
@@ -81,16 +80,11 @@ void KiviProject::bilateral_filter_3d()
       col_vector.push_back(point_vector);
     }
     cloud_to_save.push_back(col_vector);
-    // std::cout << "continue" << std::endl;
   }
-
-  std::cout << "BEFORE SAVE" << std::endl;
 
   bilateral_filter_3d_->writePLYFile(
     "/home/ataparlarl/projects/kivi_assignment/kivi_project/export/filtered_cloud.ply",
     cloud_to_save, false);
-
-  std::cout << "saved" << std::endl;
 }
 
 void KiviProject::correspondence_matching()
@@ -128,16 +122,20 @@ void KiviProject::correspondence_matching()
 
 
   cv::Mat normalized_disparity_map;
-  cv::normalize(disp_map_image, normalized_disparity_map, 0.0, 1.0, cv::NORM_MINMAX);
+  cv::normalize(disp_map_image, normalized_disparity_map, 0.0, 255, cv::NORM_MINMAX);
   cv::imshow("Display window", normalized_disparity_map);
   cv::waitKey(0);
 
-  for (int row=0; row<720; row++) {
-    for (int col=0; col<1280; col++) {
-      std::cout << disparity_map.at(row).at(col) << ", ";
-    }
-    std::cout << std::endl;
-  }
+  cv::imwrite(
+    "/home/ataparlarl/projects/kivi_assignment/kivi_project/export/disparity_map.png",
+    normalized_disparity_map);
+
+  // for (int row=0; row<720; row++) {
+  //   for (int col=0; col<1280; col++) {
+  //     std::cout << disparity_map.at(row).at(col) << ", ";
+  //   }
+  //   std::cout << std::endl;
+  // }
 
 }
 

@@ -51,7 +51,8 @@ void CorrespondenceMatching::sum_of_squared_distances(
   std::vector<std::vector<double>>& right_image,
   std::vector<std::vector<double>>& disparity_map)
 {
-  int window_size = 5;
+  int window_size = 15;
+
   for (int y=0; y<height; y++) {
     for (int x_l=0; x_l<width; x_l++) {
 
@@ -69,7 +70,7 @@ void CorrespondenceMatching::sum_of_squared_distances(
           best_match_x_r = x_r;
         }
       }
-      // Store the disparity
+
       disparity_map[y][x_l] = x_l - best_match_x_r;
     }
   }
