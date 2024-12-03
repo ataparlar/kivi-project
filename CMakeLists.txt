@@ -3,10 +3,11 @@ project(kivi_project VERSION 0.1.0 LANGUAGES C CXX)
 
 find_package(OpenCV REQUIRED)
 
-add_executable(kivi_project 
-    src/main.cpp 
-    src/phase_map_generator.cpp
-    src/3d_bilateral_filtering.cpp)
+add_executable(kivi_project
+        src/main.cpp
+        src/phase_map_generator.cpp
+        src/correspondence_matching.cpp
+        src/3d_bilateral_filtering.cpp)
 
 include_directories(include)
 

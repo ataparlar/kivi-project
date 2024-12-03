@@ -3,5 +3,7 @@
 build/
 out/
 export/
+.idea/
+cmake-build-debug/
 
 CMakePresets.json
